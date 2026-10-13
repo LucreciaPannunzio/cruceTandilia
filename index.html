@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>30K Cruce Tandilia 🏃‍♀️✨</title>
+    <!-- Tailwind CSS for minimalist pastel styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        pastel: {
+                            bg: '#fcfaf8',
+                            pink: '#ffe5ec',
+                            peach: '#ffe5d9',
+                            green: '#d8f3dc',
+                            blue: '#e0fbfc',
+                            yellow: '#fefae0',
+                            gray: '#f8f9fa',
+                            text: '#4a4a4a',
+                            accent: '#ffb3c6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: theme('colors.pastel.bg');
+            color: theme('colors.pastel.text');
+        }
+        
+        .day-checkbox {
+            appearance: none;
+            width: 1.5rem;
+            height: 1.5rem;
+            border: 2px solid theme('colors.pastel.accent');
+            border-radius: 0.375rem;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease-in-out;
+            background-color: white;
+            flex-shrink: 0;
+        }
+
+        .day-checkbox:checked {
+            background-color: white;
+            border-color: #22c55e;
+        }
+
+        .day-checkbox:checked::after {
+            content: '✓';
+            position: absolute;
+            color: #22c55e;
+            font-size: 1.25rem;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .card-completed {
+            opacity: 0.7;
+            filter: grayscale(15%);
+        }
+
+        .progress-bar-fill {
+            transition: width 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen pb-12">
+
+    <!-- Header & Progress Section -->
+    <header class="max-w-4xl mx-auto pt-8 px-4 sm:pt-10 sm:px-6 pb-4 sm:pb-6 text-center">
+        <h1 class="text-3xl sm:text-4xl font-semibold mb-3">Mi Camino a los 30K Cruce Tandilia 🏃‍♀️⛰️✨</h1>
+        <p class="text-sm sm:text-lg text-gray-500 mb-6 px-2">
+            ¡Paso a paso hacia las sierras de Tandil! 🏃‍♀️⛰️
+        </p>
+        
+        <div class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-gray-100 mb-6 sm:mb-8">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-medium text-pastel-text text-sm sm:text-base">Progreso del Entrenamiento</span>
+                <span id="progress-text" class="font-bold text-pastel-accent text-sm sm:text-base">0%</span>
+            </div>
+            <div class="w-full bg-gray-100 rounded-full h-3 sm:h-4 overflow-hidden">
+                <div id="progress-bar" class="progress-bar-fill bg-pastel-accent h-3 sm:h-4 rounded-full" style="width: 0%"></div>
+            </div>
+            <p class="text-xs sm:text-sm mt-3 text-gray-500 text-left">Días completados: <span id="days-completed">0</span> / <span id="total-days">0</span></p>
+        </div>
+    </header>
+
+    <!-- Training Plan Container -->
+    <main id="plan-container" class="max-w-4xl mx-auto px-4 sm:px-6 space-y-6 sm:space-y-8">
+        <!-- Javascript will inject weeks here -->
+    </main>
+
+    <script>
+        const TREN_INFERIOR = "Gimnasio: Tren Inferior (Fuerza de piernas, glúteos y excéntricos para bajadas).";
+        const TREN_SUPERIOR = "Gimnasio: Tren Superior + Core (Estabilidad y postura).";
+        const GIMNASIO_COMPLEMENTARIOS = "Gimnasio: Fuerza ligera, movilidad articular y fortalecimiento de Core.";
+        const DESCANSO = "Descanso total. ¡Recuperar es parte de entrenar!";
+
+        const planData = [
+            {
+                weekNumber: 1,
+                dateRange: "19/10 - 25/10 (Construcción de Base)",
+                days: [
+                    { id: "w1-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "40 minutos de trote aeróbico suave (aprox 6 km).", bg: "bg-pastel-peach" },
+                    { id: "w1-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: TREN_INFERIOR, bg: "bg-pastel-green" },
+                    { id: "w1-d3", day: "Miércoles", label: "Cuestas / Escaleras 🏃‍♀️‍➡️", desc: "15' calor + 8 repeticiones de cuestas/escaleras en puente o gimnasio + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w1-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: TREN_SUPERIOR, bg: "bg-pastel-green" },
+                    { id: "w1-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: GIMNASIO_COMPLEMENTARIOS, bg: "bg-pastel-green" },
+                    { id: "w1-d6", day: "Sábado", label: "Fondo Largo 🏃‍♀️‍➡️", desc: "10 km a ritmo aeróbico cómodo y suave (primer paso desde los 8 km).", bg: "bg-pastel-peach" },
+                    { id: "w1-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 2,
+                dateRange: "26/10 - 01/11",
+                days: [
+                    { id: "w2-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "45 minutos de trote aeróbico (aprox 7-8 km).", bg: "bg-pastel-peach" },
+                    { id: "w2-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: TREN_INFERIOR, bg: "bg-pastel-green" },
+                    { id: "w2-d3", day: "Miércoles", label: "Pasadas 🏃‍♀️‍➡️", desc: "15' calor + 8 pasadas de 400m en llano (recup. 1 min) + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w2-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: TREN_SUPERIOR, bg: "bg-pastel-green" },
+                    { id: "w2-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: GIMNASIO_COMPLEMENTARIOS, bg: "bg-pastel-green" },
+                    { id: "w2-d6", day: "Sábado", label: "Fondo Largo 🏃‍♀️‍➡️", desc: "12 km manteniendo ritmo parejo y cómodo.", bg: "bg-pastel-peach" },
+                    { id: "w2-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 3,
+                dateRange: "02/11 - 08/11",
+                days: [
+                    { id: "w3-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "50 minutos de trote fluido (aprox 8 km).", bg: "bg-pastel-peach" },
+                    { id: "w3-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: TREN_INFERIOR, bg: "bg-pastel-green" },
+                    { id: "w3-d3", day: "Miércoles", label: "Cuestas y Escaleras 🏃‍♀️‍➡️", desc: "15' calor + 10 repeticiones fuertes en subida/escaleras + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w3-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: TREN_SUPERIOR, bg: "bg-pastel-green" },
+                    { id: "w3-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: GIMNASIO_COMPLEMENTARIOS, bg: "bg-pastel-green" },
+                    { id: "w3-d6", day: "Sábado", label: "Fondo Largo 🏃‍♀️‍➡️", desc: "14 km a ritmo constante. Sentirse sólida al final.", bg: "bg-pastel-peach" },
+                    { id: "w3-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 4,
+                dateRange: "09/11 - 15/11",
+                days: [
+                    { id: "w4-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "55 minutos de trote (aprox 8-9 km).", bg: "bg-pastel-peach" },
+                    { id: "w4-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: TREN_INFERIOR, bg: "bg-pastel-green" },
+                    { id: "w4-d3", day: "Miércoles", label: "Pasadas de Ritmo 🏃‍♀️‍➡️", desc: "15' calor + 5 pasadas de 1000m a ritmo objetivo (recup. 90 seg) + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w4-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: TREN_SUPERIOR, bg: "bg-pastel-green" },
+                    { id: "w4-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: GIMNASIO_COMPLEMENTARIOS, bg: "bg-pastel-green" },
+                    { id: "w4-d6", day: "Sábado", label: "Fondo Largo 🏃‍♀️‍➡️", desc: "15 km soltando piernas a ritmo moderado.", bg: "bg-pastel-peach" },
+                    { id: "w4-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 5,
+                dateRange: "16/11 - 22/11 (Enfoque Trail / Cuestas)",
+                days: [
+                    { id: "w5-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "50 minutos de trote aeróbico (~8 km).", bg: "bg-pastel-peach" },
+                    { id: "w5-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: "Gimnasio: Tren Inferior (enfoque en cuádriceps para bajadas en sierra).", bg: "bg-pastel-green" },
+                    { id: "w5-d3", day: "Miércoles", label: "Cuestas / Escaleras 🏃‍♀️‍➡️", desc: "15' calor + 12 repeticiones en escalera/puente marcando potencia + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w5-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: TREN_SUPERIOR, bg: "bg-pastel-green" },
+                    { id: "w5-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: GIMNASIO_COMPLEMENTARIOS, bg: "bg-pastel-green" },
+                    { id: "w5-d6", day: "Sábado", label: "Fondo Largo 🏃‍♀️‍➡️", desc: "15 km buscando puentes o terrenos irregulares.", bg: "bg-pastel-peach" },
+                    { id: "w5-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 6,
+                dateRange: "23/11 - 29/11",
+                days: [
+                    { id: "w6-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "55 minutos de trote continuo (máximo 10 km).", bg: "bg-pastel-peach" },
+                    { id: "w6-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: TREN_INFERIOR, bg: "bg-pastel-green" },
+                    { id: "w6-d3", day: "Miércoles", label: "Cuestas / Cinta Inclinada 🏃‍♀️‍➡️", desc: "15' calor + 10 repeticiones en inclinación (8-10%) + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w6-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: TREN_SUPERIOR, bg: "bg-pastel-green" },
+                    { id: "w6-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: GIMNASIO_COMPLEMENTARIOS, bg: "bg-pastel-green" },
+                    { id: "w6-d6", day: "Sábado", label: "Fondo Largo 🏃‍♀️‍➡️", desc: "17 km sostenidos.", bg: "bg-pastel-peach" },
+                    { id: "w6-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 7,
+                dateRange: "30/11 - 06/12",
+                days: [
+                    { id: "w7-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "50 minutos de trote aeróbico (~9 km).", bg: "bg-pastel-peach" },
+                    { id: "w7-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: TREN_INFERIOR, bg: "bg-pastel-green" },
+                    { id: "w7-d3", day: "Miércoles", label: "Pasadas / Cuestas 🏃‍♀️‍➡️", desc: "15' calor + 6x400m cuestas + 4x400m llanos + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w7-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: TREN_SUPERIOR, bg: "bg-pastel-green" },
+                    { id: "w7-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: GIMNASIO_COMPLEMENTARIOS, bg: "bg-pastel-green" },
+                    { id: "w7-d6", day: "Sábado", label: "Fondo Largo 🏃‍♀️‍➡️", desc: "18 km sumando desnivel urbano (escaleras o puentes).", bg: "bg-pastel-peach" },
+                    { id: "w7-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 8,
+                dateRange: "07/12 - 13/12 (Pico Máximo Tandil)",
+                days: [
+                    { id: "w8-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "60 minutos de trote (máximo 10 km).", bg: "bg-pastel-peach" },
+                    { id: "w8-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: TREN_INFERIOR, bg: "bg-pastel-green" },
+                    { id: "w8-d3", day: "Miércoles", label: "Cuestas y Escaleras 🏃‍♀️‍➡️", desc: "15' calor + 14 repeticiones de cuestas/escaleras intensas + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w8-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: TREN_SUPERIOR, bg: "bg-pastel-green" },
+                    { id: "w8-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: GIMNASIO_COMPLEMENTARIOS, bg: "bg-pastel-green" },
+                    { id: "w8-d6", day: "Sábado", label: "Fondo Largo Específico 🏃‍♀️‍➡️", desc: "20 km. Máximo volumen previo al Cruce Tandilia.", bg: "bg-pastel-peach" },
+                    { id: "w8-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 9,
+                dateRange: "14/12 - 20/12",
+                days: [
+                    { id: "w9-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "50 minutos de trote suave (~8 km).", bg: "bg-pastel-peach" },
+                    { id: "w9-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: TREN_INFERIOR, bg: "bg-pastel-green" },
+                    { id: "w9-d3", day: "Miércoles", label: "Cuestas Controladas 🏃‍♀️‍➡️", desc: "15' calor + 8 repeticiones de cuestas progresivas + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w9-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: TREN_SUPERIOR, bg: "bg-pastel-green" },
+                    { id: "w9-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: GIMNASIO_COMPLEMENTARIOS, bg: "bg-pastel-green" },
+                    { id: "w9-d6", day: "Sábado", label: "Fondo Largo 🏃‍♀️‍➡️", desc: "15 km a ritmo controlado.", bg: "bg-pastel-peach" },
+                    { id: "w9-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 10,
+                dateRange: "21/12 - 27/12 (Fiestas / Mantenimiento)",
+                days: [
+                    { id: "w10-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "45 minutos de trote fácil (~8 km).", bg: "bg-pastel-peach" },
+                    { id: "w10-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: TREN_INFERIOR, bg: "bg-pastel-green" },
+                    { id: "w10-d3", day: "Miércoles", label: "Pasadas 🏃‍♀️‍➡️", desc: "15' calor + 6 pasadas de 600m a ritmo fluido + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w10-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: TREN_SUPERIOR, bg: "bg-pastel-green" },
+                    { id: "w10-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: GIMNASIO_COMPLEMENTARIOS, bg: "bg-pastel-green" },
+                    { id: "w10-d6", day: "Sábado", label: "Fondo Medio 🏃‍♀️‍➡️", desc: "12 km regenerativos.", bg: "bg-pastel-peach" },
+                    { id: "w10-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 11,
+                dateRange: "28/12 - 03/01 (Descarga Previa Tandil)",
+                days: [
+                    { id: "w11-d1", day: "Lunes", label: "Fondito Corto 🏃‍♀️‍➡️", desc: "40 minutos de trote suave (~7 km).", bg: "bg-pastel-peach" },
+                    { id: "w11-d2", day: "Martes", label: "Fuerza 🏋️‍♀️", desc: "Gimnasio: Tren Inferior muy liviano (bajar 40% peso).", bg: "bg-pastel-green" },
+                    { id: "w11-d3", day: "Miércoles", label: "Cuestas Suaves 🏃‍♀️‍➡️", desc: "15' calor + 6 cuestas cortas para activar sin fatigar + 10' afloje.", bg: "bg-pastel-blue" },
+                    { id: "w11-d4", day: "Jueves", label: "Fuerza 🏋️‍♀️", desc: "Gimnasio: Tren Superior ligero y movilidad.", bg: "bg-pastel-green" },
+                    { id: "w11-d5", day: "Viernes", label: "Fuerza / Core 🏋️‍♀️", desc: "Gimnasio: Solo movilidad, zona media ligera y estiramientos.", bg: "bg-pastel-green" },
+                    { id: "w11-d6", day: "Sábado", label: "Fondo Corto 🏃‍♀️‍➡️", desc: "10 km fluidos para activar piernas.", bg: "bg-pastel-peach" },
+                    { id: "w11-d7", day: "Domingo", label: "Descanso 💆‍♀️", desc: DESCANSO, bg: "bg-pastel-gray" }
+                ]
+            },
+            {
+                weekNumber: 12,
+                dateRange: "04/01 - 10/01 (¡Semana 30K Cruce Tandilia!)",
+                days: [
+                    { id: "w12-d1", day: "Lunes", label: "Activación 🏃‍♀️‍➡️", desc: "30 minutos de trote regenerativo muy suave.", bg: "bg-pastel-peach" },
+                    { id: "w12-d2", day: "Martes", label: "Movilidad 🤸‍♀️", desc: "Gimnasio: Movilidad articular y elongación profunda.", bg: "bg-pastel-green" },
+                    { id: "w12-d3", day: "Miércoles", label: "Trote corto 🏃‍♀️‍➡️", desc: "20 minutos de trote + 4 rectas progresivas de 100m.", bg: "bg-pastel-blue" },
+                    { id: "w12-d4", day: "Jueves", label: "Descanso / Viaje 💆‍♀️", desc: "Descanso total y viaje a Tandil.", bg: "bg-pastel-gray" },
+                    { id: "w12-d5", day: "Viernes", label: "Acreditación / Descanso 🤸‍♀️", desc: "Retiro de kit, descanso total e hidratación.", bg: "bg-pastel-yellow" },
+                    { id: "w12-d6", day: "Sábado", label: "¡ETAPA 1 TANDIL (15K)! 🏃‍♀️‍➡️⛰️", desc: "¡Primeras sierras! Ritmo inteligente. Hidratación y recuperación inmediata post-carrera.", bg: "bg-pastel-pink text-gray-800 border-2 border-pastel-accent" },
+                    { id: "w12-d7", day: "Domingo", label: "¡ETAPA 2 TANDIL (15K)! 🏃‍♀️‍➡️🏅", desc: "¡Etapa final! A disfrutar y cruzar la meta acumulando los 30K.", bg: "bg-pastel-pink text-gray-800 border-2 border-pastel-accent" }
+                ]
+            }
+        ];
+
+        let totalActiveDays = 0;
+        let savedProgress = JSON.parse(localStorage.getItem('runProgress_30k_tandil')) || {};
+        let savedEmojis = JSON.parse(localStorage.getItem('runEmojis_30k_tandil')) || {};
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('plan-container');
+
+            planData.forEach(week => {
+                const weekDiv = document.createElement('div');
+                weekDiv.className = 'bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden';
+                
+                const weekHeader = document.createElement('div');
+                weekHeader.className = 'bg-gray-50 px-4 py-3 sm:px-6 sm:py-4 border-b border-gray-100 flex justify-between items-center';
+                weekHeader.innerHTML = `
+                    <h2 class="text-lg sm:text-xl font-semibold">Semana ${week.weekNumber}</h2>
+                    <span class="text-xs sm:text-sm text-gray-500">${week.dateRange}</span>
+                `;
+                weekDiv.appendChild(weekHeader);
+
+                const daysDiv = document.createElement('div');
+                daysDiv.className = 'p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 gap-4';
+
+                week.days.forEach(day => {
+                    totalActiveDays++;
+
+                    const isChecked = savedProgress[day.id] ? 'checked' : '';
+                    const completedClass = isChecked ? 'card-completed' : '';
+                    const currentEmoji = savedEmojis[day.id] || '';
+                    
+                    const dayCard = document.createElement('div');
+                    dayCard.className = `flex items-start gap-3 sm:gap-4 p-4 sm:p-5 rounded-xl transition-all duration-300 ${day.bg} ${completedClass}`;
+                    dayCard.id = `card-${day.id}`;
+                    
+                    dayCard.innerHTML = `
+                        <div class="flex-shrink-0 mt-1">
+                            <input type="checkbox" id="${day.id}" class="day-checkbox" ${isChecked} onchange="toggleDay('${day.id}')">
+                        </div>
+                        <div class="flex-1 w-full min-w-0">
+                            <div class="flex items-center gap-2 mb-1 flex-wrap">
+                                <label for="${day.id}" class="font-semibold text-base sm:text-lg cursor-pointer">${day.day}</label>
+                                <span class="text-xs font-medium px-2 py-1 bg-white bg-opacity-50 rounded-full">${day.label}</span>
+                            </div>
+                            <p class="text-xs sm:text-sm cursor-pointer mb-3 leading-relaxed" onclick="document.getElementById('${day.id}').click()">${day.desc}</p>
+                            
+                            <div class="flex flex-wrap items-center gap-2 bg-white bg-opacity-40 p-2 sm:px-3 sm:py-2 rounded-lg w-full sm:w-max mt-2" onclick="event.stopPropagation()">
+                                <span class="text-xs text-gray-600 mr-1 sm:mr-2 font-medium w-full sm:w-auto mb-1 sm:mb-0">¿Cómo te sentiste?</span>
+                                
+                                <div class="flex items-center gap-3">
+                                    <label class="relative cursor-pointer flex items-center justify-center">
+                                        <input type="radio" name="estado_${day.id}" value="bien" class="hidden peer" onchange="saveEmoji('${day.id}', 'bien')" ${currentEmoji === 'bien' ? 'checked' : ''}>
+                                        <span class="block text-xl sm:text-2xl opacity-40 hover:opacity-70 peer-checked:opacity-100 peer-checked:scale-110 peer-checked:bg-pastel-green rounded-full px-1 transition-all duration-200">😃</span>
+                                    </label>
+
+                                    <label class="relative cursor-pointer flex items-center justify-center">
+                                        <input type="radio" name="estado_${day.id}" value="regular" class="hidden peer" onchange="saveEmoji('${day.id}', 'regular')" ${currentEmoji === 'regular' ? 'checked' : ''}>
+                                        <span class="block text-xl sm:text-2xl opacity-40 hover:opacity-70 peer-checked:opacity-100 peer-checked:scale-110 peer-checked:bg-pastel-yellow rounded-full px-1 transition-all duration-200">😐</span>
+                                    </label>
+
+                                    <label class="relative cursor-pointer flex items-center justify-center">
+                                        <input type="radio" name="estado_${day.id}" value="mal" class="hidden peer" onchange="saveEmoji('${day.id}', 'mal')" ${currentEmoji === 'mal' ? 'checked' : ''}>
+                                        <span class="block text-xl sm:text-2xl opacity-40 hover:opacity-70 peer-checked:opacity-100 peer-checked:scale-110 peer-checked:bg-pastel-accent rounded-full px-1 transition-all duration-200">😞</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    daysDiv.appendChild(dayCard);
+                });
+
+                weekDiv.appendChild(daysDiv);
+                container.appendChild(weekDiv);
+            });
+
+            document.getElementById('total-days').innerText = totalActiveDays;
+            updateProgress();
+        });
+
+        function toggleDay(dayId) {
+            const checkbox = document.getElementById(dayId);
+            const card = document.getElementById(`card-${dayId}`);
+            
+            savedProgress[dayId] = checkbox.checked;
+            localStorage.setItem('runProgress_30k_tandil', JSON.stringify(savedProgress));
+
+            if(checkbox.checked) {
+                card.classList.add('card-completed');
+            } else {
+                card.classList.remove('card-completed');
+            }
+
+            updateProgress();
+        }
+
+        function saveEmoji(dayId, status) {
+            savedEmojis[dayId] = status;
+            localStorage.setItem('runEmojis_30k_tandil', JSON.stringify(savedEmojis));
+        }
+
+        function updateProgress() {
+            const completedCount = Object.values(savedProgress).filter(val => val === true).length;
+            document.getElementById('days-completed').innerText = completedCount;
+            
+            const percentage = totalActiveDays === 0 ? 0 : Math.round((completedCount / totalActiveDays) * 100);
+            
+            document.getElementById('progress-bar').style.width = `${percentage}%`;
+            document.getElementById('progress-text').innerText = `${percentage}%`;
+        }
+    </script>
+</body>
+</html>
